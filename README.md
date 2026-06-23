@@ -19,25 +19,7 @@ Frontend: HTML, CSS, JavaScript
 Communication: REST API (JSON based)  
 Tools: Git, GitHub  
 
-## 📂 Project Structure
 
-project/
-├── backend/
-│   ├── engine.py
-│   ├── actions.py
-│   ├── phone_assist.py
-│   ├── groqAPI.py
-│   ├── log_handler.py
-│   ├── /moreSoon..../
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   ├── script.js
-│
-├── app.py
-│
-└── README.md
 
 ## 🚀 How It Works
 
