@@ -3,7 +3,7 @@ import requests
 def send_command(cmds):
     cmd = f"{cmds}"
     try:
-        r = requests.post("http://10.87.170.174:5005/command", 
+        r = requests.post("http://PHONE_IP:5005/command", 
                           json={"command": cmd}, timeout=3)
                           
         req = r.json()
