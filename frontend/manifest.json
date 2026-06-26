@@ -1,0 +1,25 @@
+{
+  "short_name": "Sh1v",
+  "name": "Sh1v Cyber Intelligence Matrix",
+  "description": "Tactical Full-Stack OS Dashboard",
+  "icons": [
+    {
+      "src": "/static/assets/user-avatar.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/assets/user-avatar.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#05050a",
+  "theme_color": "#05050a",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "minimal-ui"],
+  "orientation": "landscape"
+}
