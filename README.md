@@ -17,6 +17,16 @@ A high-fidelity, synchronized full-stack dashboard environment engineered for ra
 * **State Management:** Local JSON Database Persistence
 * **Environment Execution:** Optimized for absolute performance within localized terminal container frameworks (Termux/Native OS)
 
+
+---
+
+## 📢 Upcoming Update
+
+**«New working update coming on 27/06/2026.»**
+
+The next update will introduce additional functional features, backend improvements, UI refinements, and overall performance optimizations. Stay tuned!
+
+
 ## 📁 Repository Map
 
 ```text
