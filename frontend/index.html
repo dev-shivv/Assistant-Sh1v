@@ -1,222 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Sh1V — AI Assistant</title>
-<link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sh1v AI Matrix</title>
+  <link rel="stylesheet" href="/static/style.css?v=8">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.error('[PWA] Failure:', err));
+      });
+    }
+  </script>
 </head>
 <body>
-
-  <div class="app-shell">
-
-    <!-- ============ TOP BAR ============ -->
-    <header class="topbar">
-
-      <div class="brand">
-        <div class="brand-logo">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L4 6V12C4 16.5 7.5 20.5 12 22C16.5 20.5 20 16.5 20 12V6L12 2Z" stroke="currentColor" stroke-width="1.5"/>
-            <text x="12" y="15" text-anchor="middle" font-size="9" fill="currentColor" stroke="none">S</text>
-          </svg>
-        </div>
-        <div class="brand-text">
-          <span class="brand-name">Sh1v</span>
-          <span class="brand-sub">
-            AI Assistant
-            <span class="status-dot" data-status="online"></span>
-          </span>
+  <div class="app-wrapper">
+  <div class="col-left" id="panel-left">
+    <div class="neon-panel inner-pad main-panel">
+      <div class="brand-header">
+        <div class="logo-glow">Sh1v</div>
+        <div>
+          <h2>Sh1v</h2>
+          <p class="sub-text">AI Assistant</p>
         </div>
       </div>
 
-      <div class="search-bar">
-        <svg class="icon search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-          <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <input type="text" id="search-input" placeholder="Search the web or enter a command…" autocomplete="off" />
-        <button class="icon-btn search-send" id="search-send-btn" aria-label="Submit search">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+      <hr class="divider">
+
+      <div class="card-title">
+        <img src="/static/assets/icon-system.png" class="ui-icon-white ui-icon-small" alt="system">
+        <span>System overview</span>
+        <span class="align-right">v</span>
       </div>
-
-      <!-- dynamic: active state toggled by js3 -->
-      <div class="scope-toggle" id="scope-toggle" data-active="internal">
-        <button class="scope-btn" data-scope="internal">Internal</button>
-        <button class="scope-btn" data-scope="external">External</button>
-      </div>
-
-      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open menu">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-
-    </header>
-
-    <!-- ============ MAIN GRID ============ -->
-    <main class="main-grid">
-
-      <!-- ===== LEFT SIDEBAR ===== -->
-      <aside class="sidebar-left">
-
-        <section class="card panel-system-overview" id="panel-system-overview">
-          <div class="panel-header">
-            <h2><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12H6L9 21L15 3L18 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> System Overview</h2>
-            <button class="icon-btn collapse-btn" data-target="panel-system-overview" aria-label="Collapse">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-
-          <div class="panel-body">
-            <div class="overview-top">
-              <!-- dynamic: cpu ring % drawn by js2 (conic-gradient or SVG stroke-dasharray) -->
-              <div class="cpu-ring" id="cpu-ring" data-percent="0">
-                <span class="cpu-ring-value" id="cpu-ring-value">--%</span>
-                <span class="cpu-ring-label">CPU</span>
-              </div>
-              <div class="overview-stats">
-                <span class="uptime-value" id="uptime-value">--:--:--</span>
-                <span class="uptime-label">Uptime</span>
-                <!-- dynamic: sparkline rendered by js2 into this svg -->
-                <svg class="sparkline" id="cpu-sparkline" viewBox="0 0 100 30" preserveAspectRatio="none"></svg>
-              </div>
-            </div>
-
-            <!-- dynamic: meter rows generated by js2 from data list -->
-            <div class="meter-list" id="overview-meters"></div>
-          </div>
-        </section>
-
-        <section class="card panel-performance" id="panel-performance">
-          <div class="panel-header">
-            <h2><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Performance</h2>
-            <button class="icon-btn collapse-btn" data-target="panel-performance" aria-label="Collapse">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-
-          <div class="panel-body">
-            <!-- dynamic: CPU/Memory/Disk bars generated by js2 -->
-            <div class="meter-list meter-list--detailed" id="performance-meters"></div>
-
-            <!-- dynamic: network speeds filled by js2 -->
-            <div class="network-row">
-              <span class="network-label">Network</span>
-              <span class="network-values">
-                <span class="net-down"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none"><path d="M12 4V18M12 18L6 12M12 18L18 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="net-down-value">--</span></span>
-                <span class="net-up"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none"><path d="M12 20V6M12 6L6 12M12 6L18 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="net-up-value">--</span></span>
-              </span>
-            </div>
-          </div>
-        </section>
-
-        
-
-        
-
-
-        
-
-      </aside>
-
-      <!-- ===== CENTER: CHAT ===== -->
-      <section class="card panel-chat" id="panel-chat">
-        <div class="panel-header">
-          <h2><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5C21 16.75 16.97 21 12 21C10.5 21 9.1 20.65 7.85 20.02L3 21L4.3 16.7C3.47 15.27 3 13.65 3 11.5C3 6.25 7.03 2 12 2C16.97 2 21 6.25 21 11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Chat Area</h2>
-          <button class="icon-btn" id="chat-options-btn" aria-label="Chat options">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
-          </button>
-        </div>
-
-        <!-- scrollable region: only this div scrolls inside the chat card -->
-        <!-- dynamic: every bubble/card here generated by js2 from the messages array in js1 -->
-        <div class="chat-messages" id="chat-messages"></div>
-      </section>
-
-      <!-- ===== RIGHT: TERMINAL ===== -->
-      <aside class="card panel-terminal" id="panel-terminal">
-        <div class="panel-header">
-          <h2><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L10 12L4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Terminal</h2>
-          <div class="panel-header-actions">
-            <button class="icon-btn" id="terminal-clear-btn" aria-label="Clear terminal">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7H20M9 7V4H15V7M6 7L7 21H17L18 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button class="icon-btn" id="terminal-options-btn" aria-label="Terminal options">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- scrollable region: only this div scrolls inside the terminal card -->
-        <!-- dynamic: every line here generated by js2 from the log array in js1 -->
-        <div class="terminal-log" id="terminal-log"></div>
-      </aside>
-
-    </main>
-
-    <!-- ============ BOTTOM BAR ============ -->
-    <footer class="bottombar">
-
-
-      <section class="profile-card" id="profile-card">
-          <div class="profile-avatar">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21C4 17 7.5 14 12 14C16.5 14 20 17 20 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </div>
-          <div class="profile-text">
-            <span class="profile-name">Shivam</span>
-            <span class="profile-status">
-              <span class="status-dot" data-status="online"></span>
-              <span id="profile-status-text">Dev</span>
-            </span>
-          </div>
-        </section>
       
-
-      <div class="message-input">
-        <button class="icon-btn attach-btn" id="attach-btn" aria-label="Add attachment">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <input type="text" id="message-input" placeholder="Type your message…" autocomplete="off" />
-        <button class="icon-btn send-btn" id="message-send-btn" aria-label="Send message">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="icon-btn mic-btn" id="mic-btn" aria-label="Voice input">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15C13.66 15 15 13.66 15 12V6C15 4.34 13.66 3 12 3C10.34 3 9 4.34 9 6V12C9 13.66 10.34 15 12 15Z" stroke="currentColor" stroke-width="2"/><path d="M5 11V12C5 15.87 8.13 19 12 19C15.87 19 19 15.87 19 12V11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-
-      <div class="status-controls">
-        <div class="status-pill" id="keyboard-status">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="20" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M6 10H6.01M10 10H10.01M14 10H14.01M18 10H18.01M6 14H18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span class="status-pill-text">
-            Keyboard
-            <span class="status-pill-sub"><span class="status-dot" data-status="online"></span><span id="keyboard-status-text">ONLINE</span></span>
-          </span>
+      <div class="sys-overview">
+        <div class="ring-container">
+          <div class="ring-inner">
+            <h2><span id="cpu-ring-val">0</span><span class="pct">%</span></h2>
+            <p>CPU Load</p>
+          </div>
         </div>
-
-        <!-- dynamic: dropdown value + open state handled by js3 -->
-        <div class="status-pill status-pill--dropdown" id="mode-status" data-open="false">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
-          <span class="status-pill-text">
-            Mode
-            <span class="status-pill-sub" id="mode-value-text">Hybrid</span>
-          </span>
-          <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <!-- dynamic: option list injected by js2 from modes array in js1 -->
-          <ul class="mode-options" id="mode-options"></ul>
+        <div class="sys-pills">
+          <div class="pill-box">
+            <div class="pill-data"><p>RAM Percent</p><h4 id="ram-pill-val">0%</h4></div>
+          </div>
+          <div class="pill-box">
+            <div class="pill-data"><p>RAM Used</p><h4 id="ram-used-pill-val">0 / 0 GB</h4></div>
+          </div>
+          <div class="pill-box">
+            <div class="pill-data"><p>Uptime</p><h4 id="uptime-pill-val">0d 0h 0m</h4></div>
+          </div>
         </div>
       </div>
 
-    </footer>
+      <hr class="divider">
 
+      <div class="card-title">
+        <img src="/static/assets/icon-performance.png" class="ui-icon-white ui-icon-small" alt="perf">
+        <span>Performance</span>
+      </div>
+      
+      <div class="perf-row">
+        <div class="perf-labels"><span>RAM Usage</span><span id="ram-bar-label">0%</span></div>
+        <div class="bar-bg"><div id="ram-bar-fill" class="bar-fill bg-cyan" style="width: 0%;"></div></div>
+      </div>
+      <div class="perf-row">
+        <div class="perf-labels"><span>CPU</span><span id="cpu-bar-label">0%</span></div>
+        <div class="bar-bg"><div id="cpu-bar-fill" class="bar-fill bg-purple" style="width: 0%;"></div></div>
+      </div>
+    </div>
+
+    <div id="profile-trigger" class="neon-panel profile-box">
+      <div class="prof-left">
+        <div class="prof-avatar" id="global-avatar-preview">
+          <img src="/static/assets/user-avatar.png" alt="User Avatar">
+        </div>
+        <div>
+          <h4 id="prof-name-display">Loading...</h4>
+          <p id="prof-role-display" class="role-text">Role: ...</p>
+        </div>
+      </div>
+      <div class="status-dot"></div>
+    </div>
   </div>
 
-  <script src="/static/js2-render.js"></script>
-  <script src="/static/js1-state.js"></script>
-  <script src="/static/js3-events.js"></script>
-  <script src="/static/js4-api.js"></script>
+  <div class="col-center neon-panel" id="panel-center">
+    <button id="btn-show-right" class="action-btn floating-toggle hidden">
+      <img src="/static/assets/icon-show.png" class="ui-icon-white" alt="Expand">
+    </button>
+
+    <div class="inner-pad flex-col-full">
+      <div class="search-pill neon-panel static-pill">
+        <img src="/static/assets/icon-search.png" class="ui-icon-white ui-icon-small" alt="Search">
+        <input type="text" placeholder="Search Browser Commands">
+        <button class="action-btn">
+          <img src="/static/assets/icon-arrow.png" class="ui-icon-white" alt="Go">
+        </button>
+      </div>
+
+      <div class="chat-area">
+        <div class="chat-title">Assistant <span>Sh1v</span> Ready...</div>
+        <div class="chat-history" id="chat-history-container"></div>
+      </div>
+
+      <div class="input-pill neon-panel static-pill">
+        <button class="action-btn">
+          <img src="/static/assets/icon-plus.png" class="ui-icon-white" alt="Attach">
+        </button>
+        <input type="text" id="chat-input" placeholder="Initialize secure command matrix...">
+        <button id="send-btn" class="send-neon action-btn">
+          <img src="/static/assets/icon-send.png" class="ui-icon-white" alt="Execute">
+        </button>
+        <button class="action-btn" id="mic-btn">
+          <img src="/static/assets/icon-mic.png" class="ui-icon-white" alt="Voice">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-right" id="panel-right">
+    <div class="right-header">
+      <div class="toggle-container neon-panel">
+        <div id="toggle-slider" class="toggle-slider"></div>
+        <button id="tab-terminal" class="toggle-btn active">Terminal</button>
+        <button id="tab-console" class="toggle-btn">Console</button>
+      </div>
+      
+      <button class="action-btn" id="btn-clear-chat">
+        <img src="/static/assets/icon-trash.png" class="ui-icon-white" alt="Clear Log">
+      </button>
+      <button class="action-btn" id="btn-hide-right">
+        <img src="/static/assets/icon-hide.png" class="ui-icon-white" alt="Collapse">
+      </button>
+    </div>
+
+    <div class="neon-panel inner-pad main-panel">
+      <div class="terminal-body">
+        <div id="view-terminal" class="view-pane active">
+          <p><span class="cmd">C:\Sh1v> $ _</span></p><br>
+          <p class="sys-msg">Windows Terminal Integration Pending Desktop Host...</p>
+        </div>
+
+        <div id="view-console" class="view-pane hidden">
+          <p class="sys-msg">[SYSTEM] Ready matrix pipelines.</p>
+          <p class="sys-msg">[INFO] Core processes stable.</p>
+        </div>
+      </div>
+
+      <div class="connection-pill neon-panel static-pill">
+        <button id="btn-hybrid" class="conn-btn active">
+          <img src="/static/assets/icon-terminal.png" class="ui-icon-white ui-icon-small" alt="Terminal">
+          Hybrid <span class="status-dot"></span>
+        </button>
+        <button id="btn-offline" class="conn-btn">
+          Offline <span class="status-dot offline-dot"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+ </div>
+  <div id="profile-modal" class="modal-overlay hidden">
+    <div class="neon-panel inner-pad modal-content">
+      <div class="card-title">Matrix Profile Editor</div>
+      <div class="prof-edit-header">
+        <div class="prof-avatar large" id="modal-avatar-preview">
+          <img src="/static/assets/user-avatar.png" alt="User">
+        </div>
+        <button class="action-btn text-btn" id="btn-upload-trigger">Change photo asset</button>
+        <input type="file" id="file-upload" accept="image/png, image/jpeg, image/webp" class="hidden">
+      </div>
+      <div class="input-group">
+        <label>Operator Name</label>
+        <input type="text" id="edit-username" placeholder="username" class="modal-input">
+      </div>
+      <div class="input-group">
+        <label>Matrix Role</label>
+        <input type="text" id="edit-role" placeholder="Role: xYZ" class="modal-input">
+      </div>
+
+      <hr class="divider">
+      <div class="card-title" style="margin-top: 10px;">Matrix Settings</div>
+      <div class="settings-deck">
+        <div class="setting-item">
+          <span>Background Mode</span>
+          <select class="matrix-select" id="setting-bg-mode">
+            <option value="fluid">Fluid Ambient Orbs</option>
+            <option value="static">Deep Space Void</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <span>Render Cap</span>
+          <select class="matrix-select" id="setting-fps-cap">
+            <option value="45">45 FPS</option>
+            <option value="30">30 FPS (Eco)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions-group">
+        <button id="btn-close-modal" class="conn-btn">Discard</button>
+        <button id="btn-save-profile" class="conn-btn active">Sync changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="voice-overlay" class="voice-overlay hidden">
+    <button id="btn-close-voice" class="action-btn kill-switch">X</button>
+    <div class="voice-glow-orb"></div>
+    <div class="soundwave-container">
+      <div class="bar bar-1"></div>
+      <div class="bar bar-2"></div>
+      <div class="bar bar-3"></div>
+      <div class="bar bar-4"></div>
+      <div class="bar bar-5"></div>
+    </div>
+    <p class="listening-text">AWAITING COMMAND...</p>
+  </div>
+
+  <script src="/static/render.js"></script>
+  <script src="/static/core.js"></script>
+  <script src="/static/voice.js"></script>
 </body>
 </html>
