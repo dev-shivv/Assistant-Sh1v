@@ -63,6 +63,25 @@ async def get_sw():
     return FileResponse("frontend/static/sw.js")
 
 
+class TerminalRequest(BaseModel):
+    command: str
+
+@app.post("/terminal")
+async def terminal(req: TerminalRequest):
+
+    if req.command == "help":
+        return {
+            "output": "Commands:\nhelp\nstatus\nclear"
+        }
+
+    if req.command == "status":
+        return {
+            "output": "AI Core Online"
+        }
+
+    return {
+        "output": f"Unknown command: {req.command}"
+    }
 
 @app.get("/api/sysinfo")
 async def get_system_telemetry():
