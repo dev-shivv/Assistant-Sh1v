@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fpsCapSelect = document.getElementById('setting-fps-cap');
 
     async function initAppCore() {
-        console.log("[SYSTEM] Sh1v OS Core Pipeline Initializing...");
+        console.log("[SYSTEM] Sh1v Pipeline Initializing...");
         await loadPersistentPreferences();
         await loadMasterChatHistory();
         startTelemetryInstrumentation(); 
@@ -305,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTelemetryDisplays(data) {
         if(cpuRingVal) cpuRingVal.innerText = data.cpu;
-        const ringValuePct = 100 - data.cpu; 
-        const ringColorGradient = `conic-gradient(var(--neon-cyan) 0%, var(--neon-purple) 42%, rgba(255,255,255,0.05) ${ringValuePct}%)`;
+        const ringValuePct =  data.cpu; 
+        const ringColorGradient = `conic-gradient(var(--neon-cyan) 0%, var(--neon-purple) ${ringValuePct}%, rgba(255,255,255,0.05) ${ringValuePct}%)`;
         if(cpuRingVal) cpuRingVal.closest('.ring-container').style.background = ringColorGradient;
 
         if(cpuBarLabel) cpuBarLabel.innerText = `${data.cpu}%`;
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(ramBarLabel) ramBarLabel.innerText = `${data.ram_percent}%`;
         if(ramBarFill) ramBarFill.style.width = `${data.ram_percent}%`;
         if(ramPillVal) ramPillVal.innerText = `${data.ram_percent}%`;
-        if(ramUsedPillVal) ramUsedPillVal.innerText = `${data.ram_used} / 16 GB`; 
+        if(ramUsedPillVal) ramUsedPillVal.innerText = `${data.ram_used} / 4 GB`; 
 
         if(uptimePillVal) uptimePillVal.innerText = data.uptime;
     }
