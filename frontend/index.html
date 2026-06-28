@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sh1v AI Matrix</title>
-  <link rel="stylesheet" href="/static/style.css?v=8">
+  
+  <link rel="stylesheet" href="/static/style.css?v=10">
   <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
@@ -15,154 +16,171 @@
   </script>
 </head>
 <body>
+
+  <canvas id="ambient-canvas"></canvas>
+
   <div class="app-wrapper">
-  <div class="col-left" id="panel-left">
-    <div class="neon-panel inner-pad main-panel">
-      <div class="brand-header">
-        <div class="logo-glow">Sh1v</div>
-        <div>
-          <h2>Sh1v</h2>
-          <p class="sub-text">AI Assistant</p>
+    <div class="col-left" id="panel-left">
+      <div class="neon-panel inner-pad main-panel">
+        <div class="brand-header">
+          <div class="logo-glow">Sh1v</div>
+          <div>
+            <h2>Sh1v</h2>
+            <p class="sub-text">AI Assistant</p>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="card-title">
+          <img src="/static/assets/icon-system.png" class="ui-icon-white ui-icon-small" alt="system">
+          <span>System overview</span>
+          <span class="align-right">v</span>
+        </div>
+        
+        <div class="sys-overview">
+          <div class="ring-container">
+            <div class="ring-inner">
+              <h2><span id="cpu-ring-val">0</span><span class="pct">%</span></h2>
+              <p>CPU Load</p>
+            </div>
+          </div>
+          <div class="sys-pills">
+            <div class="pill-box">
+              <div class="pill-data"><p>RAM Percent</p><h4 id="ram-pill-val">0%</h4></div>
+            </div>
+            <div class="pill-box">
+              <div class="pill-data"><p>RAM Used</p><h4 id="ram-used-pill-val">0 / 0 GB</h4></div>
+            </div>
+            <div class="pill-box">
+              <div class="pill-data"><p>Uptime</p><h4 id="uptime-pill-val">0d 0h 0m</h4></div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="card-title">
+          <img src="/static/assets/icon-performance.png" class="ui-icon-white ui-icon-small" alt="perf">
+          <span>Performance</span>
+        </div>
+        
+        <div class="perf-row">
+          <div class="perf-labels"><span>RAM Usage</span><span id="ram-bar-label">0%</span></div>
+          <div class="bar-bg"><div id="ram-bar-fill" class="bar-fill bg-cyan" style="width: 0%;"></div></div>
+        </div>
+        <div class="perf-row">
+          <div class="perf-labels"><span>CPU</span><span id="cpu-bar-label">0%</span></div>
+          <div class="bar-bg"><div id="cpu-bar-fill" class="bar-fill bg-purple" style="width: 0%;"></div></div>
         </div>
       </div>
 
-      <hr class="divider">
-
-      <div class="card-title">
-        <img src="/static/assets/icon-system.png" class="ui-icon-white ui-icon-small" alt="system">
-        <span>System overview</span>
-        <span class="align-right">v</span>
-      </div>
-      
-      <div class="sys-overview">
-        <div class="ring-container">
-          <div class="ring-inner">
-            <h2><span id="cpu-ring-val">0</span><span class="pct">%</span></h2>
-            <p>CPU Load</p>
+      <div id="profile-trigger" class="neon-panel profile-box">
+        <div class="prof-left">
+          <div class="prof-avatar" id="global-avatar-preview">
+            <img src="/static/assets/user-avatar.png" alt="User Avatar">
+          </div>
+          <div>
+            <h4 id="prof-name-display">Loading...</h4>
+            <p id="prof-role-display" class="role-text">Role: ...</p>
           </div>
         </div>
-        <div class="sys-pills">
-          <div class="pill-box">
-            <div class="pill-data"><p>RAM Percent</p><h4 id="ram-pill-val">0%</h4></div>
-          </div>
-          <div class="pill-box">
-            <div class="pill-data"><p>RAM Used</p><h4 id="ram-used-pill-val">0 / 0 GB</h4></div>
-          </div>
-          <div class="pill-box">
-            <div class="pill-data"><p>Uptime</p><h4 id="uptime-pill-val">0d 0h 0m</h4></div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="divider">
-
-      <div class="card-title">
-        <img src="/static/assets/icon-performance.png" class="ui-icon-white ui-icon-small" alt="perf">
-        <span>Performance</span>
-      </div>
-      
-      <div class="perf-row">
-        <div class="perf-labels"><span>RAM Usage</span><span id="ram-bar-label">0%</span></div>
-        <div class="bar-bg"><div id="ram-bar-fill" class="bar-fill bg-cyan" style="width: 0%;"></div></div>
-      </div>
-      <div class="perf-row">
-        <div class="perf-labels"><span>CPU</span><span id="cpu-bar-label">0%</span></div>
-        <div class="bar-bg"><div id="cpu-bar-fill" class="bar-fill bg-purple" style="width: 0%;"></div></div>
+        <div class="status-dot"></div>
       </div>
     </div>
 
-    <div id="profile-trigger" class="neon-panel profile-box">
-      <div class="prof-left">
-        <div class="prof-avatar" id="global-avatar-preview">
-          <img src="/static/assets/user-avatar.png" alt="User Avatar">
-        </div>
-        <div>
-          <h4 id="prof-name-display">Loading...</h4>
-          <p id="prof-role-display" class="role-text">Role: ...</p>
-        </div>
-      </div>
-      <div class="status-dot"></div>
-    </div>
-  </div>
-
-  <div class="col-center neon-panel" id="panel-center">
-    <button id="btn-show-right" class="action-btn floating-toggle hidden">
-      <img src="/static/assets/icon-show.png" class="ui-icon-white" alt="Expand">
-    </button>
-
-    <div class="inner-pad flex-col-full">
-      <div class="search-pill neon-panel static-pill">
-        <img src="/static/assets/icon-search.png" class="ui-icon-white ui-icon-small" alt="Search">
-        <input type="text" placeholder="Search Browser Commands">
-        <button class="action-btn">
-          <img src="/static/assets/icon-arrow.png" class="ui-icon-white" alt="Go">
-        </button>
-      </div>
-
-      <div class="chat-area">
-        <div class="chat-title">Assistant <span>Sh1v</span> Ready...</div>
-        <div class="chat-history" id="chat-history-container"></div>
-      </div>
-
-      <div class="input-pill neon-panel static-pill">
-        <button class="action-btn">
-          <img src="/static/assets/icon-plus.png" class="ui-icon-white" alt="Attach">
-        </button>
-        <input type="text" id="chat-input" placeholder="Initialize secure command matrix...">
-        <button id="send-btn" class="send-neon action-btn">
-          <img src="/static/assets/icon-send.png" class="ui-icon-white" alt="Execute">
-        </button>
-        <button class="action-btn" id="mic-btn">
-          <img src="/static/assets/icon-mic.png" class="ui-icon-white" alt="Voice">
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-right" id="panel-right">
-    <div class="right-header">
-      <div class="toggle-container neon-panel">
-        <div id="toggle-slider" class="toggle-slider"></div>
-        <button id="tab-terminal" class="toggle-btn active">Terminal</button>
-        <button id="tab-console" class="toggle-btn">Console</button>
-      </div>
-      
-      <button class="action-btn" id="btn-clear-chat">
-        <img src="/static/assets/icon-trash.png" class="ui-icon-white" alt="Clear Log">
+    <div class="col-center neon-panel" id="panel-center">
+      <button id="btn-show-right" class="action-btn floating-toggle hidden">
+        <img src="/static/assets/icon-show.png" class="ui-icon-white" alt="Expand">
       </button>
-      <button class="action-btn" id="btn-hide-right">
-        <img src="/static/assets/icon-hide.png" class="ui-icon-white" alt="Collapse">
-      </button>
-    </div>
 
-    <div class="neon-panel inner-pad main-panel">
-      <div class="terminal-body">
-        <div id="view-terminal" class="view-pane active">
-          <p><span class="cmd">C:\Sh1v> $ _</span></p><br>
-          <p class="sys-msg">Windows Terminal Integration Pending Desktop Host...</p>
+      <div class="inner-pad flex-col-full">
+        <div class="search-pill neon-panel static-pill">
+          <img src="/static/assets/icon-search.png" class="ui-icon-white ui-icon-small" alt="Search">
+          <input type="text" placeholder="Search Browser Commands">
+          <button class="action-btn">
+            <img src="/static/assets/icon-arrow.png" class="ui-icon-white" alt="Go">
+          </button>
         </div>
 
-        <div id="view-console" class="view-pane hidden">
-          <p class="sys-msg">[SYSTEM] Ready matrix pipelines.</p>
-          <p class="sys-msg">[INFO] Core processes stable.</p>
+        <div class="chat-area">
+          <div class="chat-title">Assistant <span>Sh1v</span> Ready...</div>
+          <div class="chat-history" id="chat-history-container"></div>
+        </div>
+
+        <div class="input-pill neon-panel static-pill">
+          <button class="action-btn">
+            <img src="/static/assets/icon-plus.png" class="ui-icon-white" alt="Attach">
+          </button>
+          <input type="text" id="chat-input" placeholder="Initialize secure command matrix...">
+          <button id="send-btn" class="send-neon action-btn">
+            <img src="/static/assets/icon-send.png" class="ui-icon-white" alt="Execute">
+          </button>
+          <button class="action-btn" id="mic-btn">
+            <img src="/static/assets/icon-mic.png" class="ui-icon-white" alt="Voice">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right" id="panel-right">
+      <div class="right-header">
+        <div class="toggle-container neon-panel">
+          <div id="toggle-slider" class="toggle-slider"></div>
+          <button id="tab-terminal" class="toggle-btn active">Terminal</button>
+          <button id="tab-console" class="toggle-btn">Console</button>
+        </div>
+        
+        <button class="action-btn" id="btn-clear-chat">
+          <img src="/static/assets/icon-trash.png" class="ui-icon-white" alt="Clear Log">
+        </button>
+        <button class="action-btn" id="btn-hide-right">
+          <img src="/static/assets/icon-hide.png" class="ui-icon-white" alt="Collapse">
+        </button>
+      </div>
+
+      <div class="neon-panel inner-pad main-panel">
+        <div class="terminal-body">
+          
+          <div id="view-terminal" class="view-pane active">
+            <div id="terminal-screen" style="overflow: hidden; pointer-events: none;">
+              <div id="terminal-history">
+                <p class="sys-msg" style="color: #4ade80;">[SYS] Boot sequence initialized.</p>
+                <p class="sys-msg" style="color: #4ade80;">[SYS] Matrix core stabilizing.</p>
+                <p class="sys-msg" style="color: #94a3b8;">[INFO] Terminal interface idle. Awaiting remote uplink...</p>
+              </div>
+              <div class="terminal-input-line" style="opacity: 0.5;">
+                <span class="prompt">C:\Sh1v&gt;</span>
+                <span class="cursor" style="display: inline-block; width: 8px; height: 16px; background: #fff; animation: blink 1s step-end infinite;"></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="view-console" class="view-pane hidden">
+            <p class="sys-msg">[SYSTEM] Ready matrix pipelines.</p>
+            <p class="sys-msg">[INFO] Core processes stable.</p>
+          </div>
         </div>
       </div>
 
-      <div class="connection-pill neon-panel static-pill">
-        <button id="btn-hybrid" class="conn-btn active">
-          <img src="/static/assets/icon-terminal.png" class="ui-icon-white ui-icon-small" alt="Terminal">
-          Hybrid <span class="status-dot"></span>
-        </button>
-        <button id="btn-offline" class="conn-btn">
-          Offline <span class="status-dot offline-dot"></span>
-        </button>
+      <div class="neon-panel mode-pill">
+        <div class="connection-pill neon-panel static-pill">
+          <button id="btn-hybrid" class="conn-btn active">
+            <img src="/static/assets/icon-terminal.png" class="ui-icon-white ui-icon-small">
+            Hybrid <span class="status-dot"></span>
+          </button>
+          <button id="btn-offline" class="conn-btn">
+            <img src="/static/assets/icon-terminal.png" class="ui-icon-white ui-icon-small">
+            Offline <span class="status-dot offline-dot"></span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
- </div>
+
   <div id="profile-modal" class="modal-overlay hidden">
     <div class="neon-panel inner-pad modal-content">
-      <div class="card-title">Matrix Profile Editor</div>
+      <div class="card-title">Settings & Profile Editor</div>
       <div class="prof-edit-header">
         <div class="prof-avatar large" id="modal-avatar-preview">
           <img src="/static/assets/user-avatar.png" alt="User">
@@ -180,7 +198,7 @@
       </div>
 
       <hr class="divider">
-      <div class="card-title" style="margin-top: 10px;">Matrix Settings</div>
+      <div class="card-title" style="margin-top: 10px;">Settings</div>
       <div class="settings-deck">
         <div class="setting-item">
           <span>Background Mode</span>
@@ -218,8 +236,8 @@
     <p class="listening-text">AWAITING COMMAND...</p>
   </div>
 
-  <script src="/static/render.js"></script>
-  <script src="/static/core.js"></script>
-  <script src="/static/voice.js"></script>
-</body>
+  <script src="/static/render.js?v=1"></script>
+  <script src="/static/core.js?v=2"></script>
+  <script src="/static/voice.js?v=1"></script>
+  </body>
 </html>
