@@ -3,7 +3,6 @@ from typing import Optional, Any
 import re
 import backend.actions as ac
 import backend.phone_assist as assist
-#from backend.HCscript import HCS
 from backend.log_handler import log_and_guard
 import backend.groqAPI as agf 
 
@@ -48,13 +47,6 @@ class Parser:
             cmd = phone_assistance.group(1)
             return assist.send_command(cmd)
         
-        
-        """hcs_match = difflib.get_close_matches(clean_text, self.command_list, n=1, cutoff=0.85)
-        if hcs_match:
-            matched_cmd = hcs_match[0].replace(" ", "_")
-            hcs_func = getattr(HCS, matched_cmd, None)
-            if callable(hcs_func):
-                return hcs_func()"""
 
         corrected_text = self._correct_typos(clean_text)
         words = corrected_text.split()
@@ -77,17 +69,15 @@ class Parser:
                 target_func = getattr(ac, term, None) or getattr(assist, term, None)
             
             if callable(target_func):
-                return target_func(query) #if query else target_func()
-        
-        
-        """self.state= self.button.current_state
-        if self.state == 0:
-            return "Hey Sorry but ONLINE mode is under developement you may check out HYBRID for now."
-        elif self.state ==1:
-            return agf.ask_groq_fast(raw_text)
-        else:
-            return "Hey Sorry but OFFLINE mode is under developement you may check out HYBRID for now."""
+                return target_func(query)
+                
         try:
-            return "error"
+            return agf.ask_groq_fast(raw_text)
         except Exception as e:
             return f"{e}"
+            
+            
+            
+if __name__ == "__main__":
+    input = input("input command: ")
+    Parser.parse(input)

@@ -3,6 +3,7 @@ import os
 import subprocess
 import webbrowser
 import psutil
+from backend.playlist_yt import Playlist
 
 # ==========================================
 # 1.         SYSTEM
@@ -28,10 +29,14 @@ def system_info():
 def play_youtube(query_youtube=None):
     if not query_youtube:
         return open_youtube()
-    url = f"https://www.youtube.com/results?search_query={query_youtube}"
-    webbrowser.open(url)
-    return f"[SUCCESS] Opened YouTube For Query: {query_youtube}", f"Sure Sir,\nI've opened YouTube and searched {query_youtube} for you."
-
+    elif any(word in Playlist.playlist for word in query_youtube.split()):
+        playlist = Playlist()
+        return playlist.play_song(query_youtube)
+    else:
+        url = f"https://www.youtube.com/results?search_query={query_youtube}"
+        webbrowser.open(url)
+        return f"[SUCCESS] Opened YouTube For Query: {query_youtube}", f"Sure Sir,\nI've opened YouTube and searched {query_youtube} for you."
+        
 def search_google(query_web=None):
     if not query_web:
         webbrowser.open("https://www.google.com/")
