@@ -2,7 +2,7 @@ import requests
 import json
 
 # Replace this with your phone's actual IP. 
-PHONE_IP = "ENTER_YOUR_PHONE  _IP"
+PHONE_IP = "10.247.196.174"
 PORT = 8080
 
 def send_raw_command(raw_text: str):
@@ -18,8 +18,10 @@ def send_raw_command(raw_text: str):
         
         if response.status_code == 200:
             result = response.json()
-            print(f"Server Response: {json.dumps(result, indent=2)}")
-            return result
+            console = f"Server Response: {json.dumps(result, indent=2)}"
+            device_response = result.get("result")
+            chat = f"Okay Sir, I asked target device to execute \"{raw_text}\"  and he said \"{device_response}\"."
+            return result, chat
         else:
             print(f"HTTP Error: {response.status_code}")
             return None
