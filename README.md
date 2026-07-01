@@ -32,11 +32,18 @@ Sh1v is a high-performance, full-stack AI assistant designed to feel like a nati
 ## 🛠️ The Tech Stack
 
 * **Backend Engine:** Python, FastAPI, Uvicorn 
-* **AI Brain:** Groq API SDK
+* **AI Brain:** Groq API
 * **Mobile Bridge:** Termux API, Android Activity Manager (`am`), REST
 * **Frontend Visuals:** HTML5, CSS3, Vanilla JavaScript (ES6)
 * **Background Graphics:** Native HTML5 Canvas 2D
 * **App Deployment:** Service Workers, Web Manifest (PWA)
+
+## Future Plan
+* Wake word awakening
+* More advanced command parsing
+* Natural Language processisng
+* Wrap up application in TAURI framework
+* and many more...
 
 ---
 
